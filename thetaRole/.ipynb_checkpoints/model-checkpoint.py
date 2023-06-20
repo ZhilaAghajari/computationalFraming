@@ -261,23 +261,14 @@ class ThetaRoleModel:
             self.zeta[t] = (self.n_t_reln[t] + self.lam) / (self.n_t[t] + self.R * self.lam) 
         return self.zeta
     
-#     def compute_psi(self):
-#         '''
-#         Compute the psi matrix from the plate diagram
-#         '''
-#         self.psi = np.zeros((self.T, self.K))
-#         #shouldn't it be a 2 dimentioanl matrxi??? no. it is going to be used to print top topics of each theta role
-#         for t in range(self.T):
-#             self.psi[t] = (self.n_t_k[t] + self.omega) / (self.n_t[t] + self.K * self.omega) 
-#         return self.psi
 
     def print_topics(self):
         '''
         Print topics
         '''
         for k in range(self.K):
-            word_ids = np.argsort(self.beta[k])[::-1][:10]
-            probs = np.sort(self.beta[k])[::-1][:10]
+            word_ids = np.argsort(self.beta[k])[::-1][:20]
+            probs = np.sort(self.beta[k])[::-1][:20]
             top_words = [self.id2word[i] for i in word_ids]
             strings = [f'{prob} * {word}' for prob, word in zip(probs, top_words)]
             print(f"Topic {str(k)}: {', '.join(strings)} \n") 
@@ -303,29 +294,63 @@ class ThetaRoleModel:
             top_theta = np.argsort(self.phi[d])[::-1][:3]
             print(f"Document {str(d)}: {' '.join(str(top_topics))} -- {' '.join(str(top_theta))}")
             
-    def print_top_documents_topic(self, top_doc=10):
+    def print_top_documents_topic(self, top_doc=20):
         '''
         print top documents for each topic
         '''
         
         for k in range(self.K):
             top_documents_indx = np.argsort(self.theta[:, k])[::-1][:top_doc]
-#             print('*** ************ *** len: ', len(top_documents_indx))
+            print('topic {0} \n'.format(k))
             try:
                 for idx in top_documents_indx:
                     print("doc {0} - {1} - {2} \n ".format(idx, self.theta[idx, k], self.originaltext[str(idx)]))
                 print('------------------------------------------------------------------------')
+                print('------------------------------------------------------------------------')
             except:
                 return top_documents_indx
     
-    def print_top_documents_theta(self, top_doc=10):
+    
+    ###### NEXT, I need to calculate given a document what is the probability of each topic and each theta role for that document.
+    def print_top_topics_doc(self, top_topics=20):
+        print('This function is not yet done!!')
+        for idx in range(self.D):
+            top_topics_indx = np.argsort(self.theta[idx, :][::-1][:top_topics])
+            print('document {0} \n'.format(idx))
+            try:
+                for k in top_topics_indx:
+                    print("topic {0} - {1} \n ".format(k, self.theta[idx, k]))
+                print('------------------------------------------------------------------------')
+                print('------------------------------------------------------------------------')
+            except:
+                return top_topics_indx
+        
+            
+    def print_top_thetas_doc(self, top_thetas=20):
+        print('This function is not yet done!!')
+        for idx in range(self.D):
+            top_thetas_indx = np.argsort(self.phi[idx, :][::-1][:top_thetas])
+            print('document {0} \n'.format(idx))
+            try:
+                for t in top_thetas_indx:
+                    print("theta {0} - {1} \n ".format(t, self.phi[idx, t]))
+                print('------------------------------------------------------------------------')
+                print('------------------------------------------------------------------------')
+            except:
+                return top_thetas_indx
+    
+    
+    
+    def print_top_documents_theta(self, top_doc=20):
         for t in range(self.T):
             top_documents_indx = np.argsort(self.phi[:, t])[::-1][:top_doc]
-#             print('something')
+            print('topic number {0} \n'.format(t))
 #             print('index of top documents: ', top_documents_indx)
             try:
                 for idx in top_documents_indx:
                     print("doc {0} - {1} - {2} \n ".format(idx, self.phi[idx, t], self.originaltext[str(idx)]))
+                print('------------------------------------------------------------------------')
+                print('------------------------------------------------------------------------')
                 print('------------------------------------------------------------------------')
             except:
                 return top_documents_indx
@@ -344,3 +369,16 @@ class ThetaRoleModel:
         self.print_theta_roles()
 #         self.print_top_of_docs()
     
+    
+    #     def compute_psi(self):
+#         '''
+#         Compute the psi matrix from the plate diagram
+#         '''
+#         self.psi = np.zeros((self.T, self.K))
+#         #shouldn't it be a 2 dimentioanl matrxi??? no. it is going to be used to print top topics of each theta role
+#         for t in range(self.T):
+#             self.psi[t] = (self.n_t_k[t] + self.omega) / (self.n_t[t] + self.K * self.omega) 
+#         return self.psi
+
+
+
